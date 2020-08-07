@@ -1,0 +1,98 @@
+MPASM  5.39                     PRACTICA9.ASM   7-31-2020  0:10:56         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001     LIST P=16F84
+                      00002 
+  00000001            00003 OPT     EQU 01H
+  00000003            00004 STATUS  EQU 03H
+  00000005            00005 PORTA   EQU 05H
+  00000006            00006 PORTB   EQU 06H
+  00000005            00007 TRISA   EQU 05H
+  00000006            00008 TRISB   EQU 06H
+  0000000B            00009 INTCON  EQU 0BH
+                      00010 
+                      00011 #DEFINE INTEDG  OPT, 6
+                      00012 #DEFINE INTF  INTCON, 1
+                      00013 
+                      00014 #DEFINE BANK0   BCF STATUS, 5
+                      00015 #DEFINE BANK1   BSF STATUS, 5
+                      00016 
+0000                  00017     ORG 0
+0000   2810           00018     GOTO INICIO
+                      00019 
+0010                  00020 INICIO ORG 10
+0010   1683           00021     BANK1
+0011   1701           00022     BSF     INTEDG      ; Manejo de interrupciones en RB0/INT en flancos de subida
+0012   0185           00023     CLRF    TRISA       ; PORTA es de salida
+0013   30FF           00024     MOVLW   H'FF'       ; Queremos PORTB puerto de lectura
+0014   0086           00025     MOVWF   TRISB       ; Ahora PORTB es de lectura
+0015   1283           00026     BANK0
+                      00027 
+0016   3090           00028     MOVLW   B'10010000'  
+0017   008B           00029     MOVWF   INTCON      ; Se habilitan las interrupciones globales y de RB0/INT
+                      00030 
+0018                  00031 MAIN
+0018   3001           00032     MOVLW   B'00000001'
+0019   0085           00033     MOVWF   PORTA       ; Ahora PORTA<0> está encendido
+001A   2818           00034     GOTO MAIN
+                      00035 
+0004                  00036     ORG     4
+0004   2850           00037     GOTO    INTER       ; Si ocurre una interrupción, brincamos a INTER
+                      00038 
+0050                  00039 INTER ORG 50
+                      00040 
+0050                  00041 E2
+0050   3002           00042     MOVLW   B'00000010' 
+0051   0085           00043     MOVWF   PORTA       ; Ahora PORTA<1> está encendido, indicando la interrupción
+                      00044 
+0052   1886           00045     BTFSC   PORTB, 1    ; Si PORTA<1> vale 1 nos mantenemos en el ciclo
+0053   2850           00046     GOTO    E2     
+                      00047 
+0054   108B           00048     BCF     INTF        ; Se borrá el bit de interrupcion RB0/INT 
+0055   0009           00049     RETFIE              ; Salimos de
+                      00050 
+Warning[205]: Found directive in column 1. (END)
+                      00051 END
+MPASM  5.39                     PRACTICA9.ASM   7-31-2020  0:10:56         PAGE  2
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BANK0                             BCF STATUS, 5
+BANK1                             BSF STATUS, 5
+E2                                00000050
+INICIO                            00000010
+INTCON                            0000000B
+INTEDG                            OPT, 6
+INTER                             00000050
+INTF                              INTCON, 1
+MAIN                              00000018
+OPT                               00000001
+PORTA                             00000005
+PORTB                             00000006
+STATUS                            00000003
+TRISA                             00000005
+TRISB                             00000006
+__16F84                           00000001
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---X----------- XXXXXXXXXXX----- ---------------- ----------------
+0040 : ---------------- XXXXXX---------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    19
+Program Memory Words Free:  1005
+
+
+Errors   :     0
+Warnings :     1 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

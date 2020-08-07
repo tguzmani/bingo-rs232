@@ -1,0 +1,360 @@
+MPASM  5.39                      CHABORRO.ASM   7-31-2020  23:12:04         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Warning[205]: Found directive in column 1. (LIST)
+                      00001 LIST P=16F84
+0000                  00002 OP
+Warning[205]: Found directive in column 1. (EQU)
+Error[111]  : Missing symbol
+                      00003 EQU 01H
+                      00004 ;DECLARACION DEL REGISTRO OPCION
+  00000001            00005 TMR0 EQU 01H
+                      00006 ;DECLARACION DEL TIMER 0
+  0000000B            00007 INTCON EQU 0BH
+                      00008 ;DECLARACION DEL REGSITRO INTCON
+  00000005            00009 TRISA EQU 05H
+                      00010 ;DECLARACION DEL REGISTRO TRISA (CONFIGURACION DEL PUERTO A)
+0000                  00011 PA
+Warning[205]: Found directive in column 1. (EQU)
+Error[111]  : Missing symbol
+                      00012 EQU 05H
+                      00013 ;DECLARACION DEL PUERTO A
+  00000003            00014 STATUS EQU 03H
+                      00015 ;DECLARACION DEL REGSITRO STATUS
+  00000010            00016 VAR EQU 10H
+                      00017 ;DECLARACION DEL REGISTRO VAR (UTILIZADO COMO CONTADOR)
+Error[128]  : Missing argument(s)
+                      00018 SEGUNI EQU
+Error[108]  : Illegal character (1)
+                      00019 11H
+                      00020 ;DECLARACION DEL REGISTRO PARA ALMACENAR LAS UINIDADES DE SEGUNDOS
+Error[128]  : Missing argument(s)
+                      00021 SEGDEC EQU
+Error[108]  : Illegal character (1)
+                      00022 12H
+                      00023 ;DECLARACION DEL REGISTRO PARA ALMACENAR LAS DECENAS DE SEGUNDOS
+Error[128]  : Missing argument(s)
+                      00024 MINUNI EQU
+Error[108]  : Illegal character (1)
+                      00025 13H
+                      00026 ;DECLARACION DEL REGISTRO PARA ALMACENAR LAS UNIDADES DE MINUTOS
+Error[128]  : Missing argument(s)
+                      00027 MINDEC EQU
+Error[108]  : Illegal character (1)
+                      00028 14H
+                      00029 ;DECLARACION DEL REGISTRO PARA ALMACENAR LAS DECENAS DE MINUTOS
+0000                  00030 PCL
+Warning[205]: Found directive in column 1. (EQU)
+Error[128]  : Missing argument(s)
+0000                  00031 EQU
+Error[108]  : Illegal character (0)
+0000                  00032 02H
+                      00033 ;DECLARACION DEL CONTADOR DE LINEAS DE PROGRAMAS
+0000                  00034 TRISB
+Warning[205]: Found directive in column 1. (EQU)
+Error[128]  : Missing argument(s)
+0000                  00035 EQU
+MPASM  5.39                      CHABORRO.ASM   7-31-2020  23:12:04         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[108]  : Illegal character (0)
+0000                  00036 06H
+                      00037 ;DECLARACION DEL REGISTRO TRISB (CONFIGURACION DEL PUERTO B)
+0000                  00038 PB
+Warning[205]: Found directive in column 1. (EQU)
+Error[128]  : Missing argument(s)
+0000                  00039 EQU
+Error[108]  : Illegal character (0)
+0000                  00040 06H
+                      00041 ;DECLARACION DEL PUERTO B
+0000                  00042 VAR1
+Warning[205]: Found directive in column 1. (EQU)
+Error[128]  : Missing argument(s)
+0000                  00043 EQU
+Error[108]  : Illegal character (1)
+0000                  00044 15H
+Warning[205]: Found directive in column 1. (ORG)
+0000                  00045 ORG 0
+                      00046 ;VECTOR DE INTERRUPCION DEL RESET
+Warning[203]: Found opcode in column 1. (GOTO)
+0000   2810           00047 GOTO INICIO
+                      00048 ;SALTO A INICIO DEL PROGRAMA
+0010                  00049 INICIO ORG 10
+Warning[203]: Found opcode in column 1. (BSF)
+0010   1683           00050 BSF STATUS,5 ;CAMBIO DE BANCO DE MEMORIA (BANCO 1)
+Warning[203]: Found opcode in column 1. (MOVLW)
+0011   30FF           00051 MOVLW B'11111111'
+Warning[203]: Found opcode in column 1. (MOVWF)
+0012   0085           00052 MOVWF TRISA
+                      00053 ;DECLARACNDO TODOS LOS PINES DEL PUERTO A COMO SALIDA, MENOS EL PA4
+Warning[203]: Found opcode in column 1. (CLRF)
+Error[128]  : Missing argument(s)
+                      00054 CLRF
+Error[116]  : Address label duplicated or different in second pass (TRISB)
+0013                  00055 TRISB
+                      00056 ;DECLARANDO AL PUERTO B COMO SALIDA
+Warning[203]: Found opcode in column 1. (MOVLW)
+0013   3007           00057 MOVLW B'00000111'
+                      00058 ;MOVIENDO EL VALOR DE 00000111 A W
+Warning[203]: Found opcode in column 1. (MOVWF)
+0014   0080           00059 MOVWF OP
+                      00060 ;ASIGNADO EL DIVISOR A 256, ASIGNADO AL TIMER, UTILIZANDO LA SENAL INTERNA DEL
+0015                  00061 MICROCONTROLADOR
+Warning[203]: Found opcode in column 1. (BCF)
+0015   1283           00062 BCF STATUS,5 ;CAMBIO DE BANCO DE MEMORIA (BANCO 0)
+Warning[203]: Found opcode in column 1. (CLRF)
+Error[128]  : Missing argument(s)
+0015   1283           00063 CLRF
+0016                  00064 SEGUNI
+                      00065 ;SE BORRAN LAS VARIABLE QUE LLEVAN EL TIEMPO
+Warning[203]: Found opcode in column 1. (CLRF)
+Error[128]  : Missing argument(s)
+                      00066 CLRF
+MPASM  5.39                      CHABORRO.ASM   7-31-2020  23:12:04         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0016                  00067 SEGDEC
+Warning[203]: Found opcode in column 1. (CLRF)
+Error[128]  : Missing argument(s)
+0016                  00068 CLRF
+0016                  00069 MINUNI
+Warning[203]: Found opcode in column 1. (CLRF)
+Error[128]  : Missing argument(s)
+0016                  00070 CLRF
+0016                  00071 MINDEC
+Warning[203]: Found opcode in column 1. (MOVLW)
+0016   30A0           00072 MOVLW B'10100000'
+                      00073 ;MOVIENDO EL VALOR DE 10100000 A W
+Warning[203]: Found opcode in column 1. (MOVWF)
+0017   008B           00074 MOVWF INTCON
+                      00075 ;HABILITANDO LAS INTERRUPCIONES Y DANDO PERMISO A LA INTERRUPCION DEL TIMER
+Warning[203]: Found opcode in column 1. (MOVLW)
+0018   30D9           00076 MOVLW d'217'
+                      00077 ;MOVIENDO EL VALOR DE 217 A W
+Warning[203]: Found opcode in column 1. (MOVWF)
+0019   0081           00078 MOVWF TMR0
+                      00079 ;PRECARGANDO EL TIMER EN 217
+Warning[203]: Found opcode in column 1. (MOVLW)
+001A   3064           00080 MOVLW D'100'
+                      00081 ;MOVIENDO EL VALOR DE 100 A W
+Warning[203]: Found opcode in column 1. (MOVWF)
+001B   0090           00082 MOVWF VAR
+                      00083 ;CARGANDO EN LA VARIABLE DE CONTEO EL VALOR DE 100
+001C                  00084 N1
+Warning[203]: Found opcode in column 1. (BTFSS)
+001C   1E00           00085 BTFSS PA,4
+                      00086 ;SE VERIFICA QUE EL BOTON DE STOP NO ESTE PRESIONADO
+Warning[203]: Found opcode in column 1. (GOTO)
+Error[128]  : Missing argument(s)
+                      00087 GOTO
+001D                  00088 FIN
+                      00089 ;SI EL BOTON ESTA PRESIONADO SE ENVIA A LA RUTINA DE FIN
+001D                  00090 N10
+Warning[203]: Found opcode in column 1. (MOVF)
+001D   0816           00091 MOVF SEGUNI,0 ;SE MUEVE EL VALOR DEL CONTADOR DE SEGUNDOS UNIDADES A W
+Warning[203]: Found opcode in column 1. (CALL)
+Error[128]  : Missing argument(s)
+001D   0816           00092 CALL
+001E                  00093 CONVERT
+                      00094 ;SE LLAMA A LA RUTINA DE CONVERTIR (BCD A 7 SEGMENTOS)
+Warning[203]: Found opcode in column 1. (MOVWF)
+001E   0080           00095 MOVWF PB
+                      00096 ;SE MUEVE EL VALOR AL PUERTO B
+Warning[203]: Found opcode in column 1. (GOTO)
+001F   281C           00097 GOTO N1
+                      00098 ;SALTA A LA ETIQUETA N1
+Error[116]  : Address label duplicated or different in second pass (CONVERT)
+0020   0780           00099 CONVERT ADDWF PCL,1
+                      00100 ;SE LE SUMA EL VALOR DE W AL APUNTADOR DE MEMORIA, LO CUAL HARA QUE SE
+MPASM  5.39                      CHABORRO.ASM   7-31-2020  23:12:04         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Error[122]  : Illegal opcode (TANTOS)
+                      00101 ADELANTA TANTOS PASOS DIGA W
+Warning[203]: Found opcode in column 1. (RETLW)
+0021   34C0           00102 RETLW B'11000000'
+                      00103 ;SE GUARDA EN W EL VALOR EN 7 SEGMENTOS PARA EL NUMERO 0
+Warning[203]: Found opcode in column 1. (RETLW)
+0022   34F9           00104 RETLW B'11111001'
+                      00105 ;SE GUARDA EN W EL VALOR EN 7 SEGMENTOS PARA EL NUMERO 1
+Warning[203]: Found opcode in column 1. (RETLW)
+0023   34A4           00106 RETLW B'10100100'
+                      00107 ;SE GUARDA EN W EL VALOR EN 7 SEGMENTOS PARA EL NUMERO 2
+Warning[203]: Found opcode in column 1. (RETLW)
+0024   34B0           00108 RETLW B'10110000'
+                      00109 ;SE GUARDA EN W EL VALOR EN 7 SEGMENTOS PARA EL NUMERO 3
+Warning[203]: Found opcode in column 1. (RETLW)
+0025   3499           00110 RETLW B'10011001'
+                      00111 ;SE GUARDA EN W EL VALOR EN 7 SEGMENTOS PARA EL NUMERO 4
+Warning[203]: Found opcode in column 1. (RETLW)
+0026   3492           00112 RETLW B'10010010'
+                      00113 ;SE GUARDA EN W EL VALOR EN 7 SEGMENTOS PARA EL NUMERO 5
+Warning[203]: Found opcode in column 1. (RETLW)
+0027   3482           00114 RETLW B'10000010'
+                      00115 ;SE GUARDA EN W EL VALOR EN 7 SEGMENTOS PARA EL NUMERO 6
+Warning[203]: Found opcode in column 1. (RETLW)
+0028   34F8           00116 RETLW B'11111000'
+                      00117 ;SE GUARDA EN W EL VALOR EN 7 SEGMENTOS PARA EL NUMERO 7
+Warning[203]: Found opcode in column 1. (RETLW)
+0029   3480           00118 RETLW B'10000000'
+                      00119 ;SE GUARDA EN W EL VALOR EN 7 SEGMENTOS PARA EL NUMERO 8
+Warning[203]: Found opcode in column 1. (RETLW)
+002A   3498           00120 RETLW B'10011000'
+                      00121 ;SE GUARDA EN W EL VALOR EN 7 SEGMENTOS PARA EL NUMERO 9
+Warning[205]: Found directive in column 1. (ORG)
+0004                  00122 ORG 4
+                      00123 ;VECTOR DE INTERRUPCION
+Warning[203]: Found opcode in column 1. (GOTO)
+0004   2890           00124 GOTO INTER
+                      00125 ;SALTA A LA RUTINA A EJECUTAR CUANDO LLEGA LA INTERRUPCION
+0090                  00126 INTER ORG 90
+Warning[203]: Found opcode in column 1. (DECFSZ)
+0090   0B90           00127 DECFSZ VAR,1
+                      00128 ;DECREMENTA EN 1 LA VARIABLE DE CONTEO (VAR) Y SI EL RESULTADO ES CERO SALTA UNA
+0091                  00129 LINEA
+Warning[203]: Found opcode in column 1. (GOTO)
+0091   2893           00130 GOTO N3
+                      00131 ;EL RESULTADO DE LA VARIABLE ES DISTINTO DE CERO
+Warning[203]: Found opcode in column 1. (GOTO)
+Error[113]  : Symbol not previously defined (SEG)
+0092   2800           00132 GOTO SEG
+                      00133 ;EL RESULTADO DE LA RESTA ES CERO Y SI ES ASI ACABA DE PASAR UN SEGUNDO
+0093                  00134 N3
+Warning[203]: Found opcode in column 1. (MOVLW)
+0093   30D9           00135 MOVLW d'217'
+MPASM  5.39                      CHABORRO.ASM   7-31-2020  23:12:04         PAGE  5
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00136 ;MOVIENDO EL VALOR DE 217 A W
+Warning[203]: Found opcode in column 1. (MOVWF)
+0094   0081           00137 MOVWF TMR0
+                      00138 ;PRECARGANDO EL TIMER EN 217
+Warning[203]: Found opcode in column 1. (BCF)
+0095   110B           00139 BCF INTCON,2 ;APAGANDO LA BANDERA DE LA INTERRUPCION DE DESBORDAMIENTO DEL TIMER
+Warning[203]: Found opcode in column 1. (RETFIE)
+0096   0009           00140 RETFIE
+                      00141 ;SALIENDO DE LA INTERRUPCION
+Error[128]  : Missing argument(s)
+                      00142 SEG INCF
+Error[108]  : Illegal character (,)
+                      00143 SEGUNI,1
+                      00144 ;SE INCREMENTAN LAS UNIDADES DE SEGUNDOS
+Warning[203]: Found opcode in column 1. (MOVF)
+Error[128]  : Missing argument(s)
+                      00145 MOVF
+Error[108]  : Illegal character (,)
+                      00146 SEGUNI,0
+                      00147 ;SE MUEVE EL VALOR DE LAS UNIDADES DE SEGUNDOS A EL REGISTRO W
+Warning[203]: Found opcode in column 1. (SUBLW)
+0097   3C0A           00148 SUBLW D'10'
+                      00149 ;SE LE RESTA 10 A EL VALOR DE W
+Warning[203]: Found opcode in column 1. (BTFSS)
+Error[128]  : Missing argument(s)
+                      00150 BTFSS
+Error[108]  : Illegal character (,)
+                      00151 STATUS,2
+                      00152 ;COMPREBA SI LA BANDERA DE ZERO SE HA ACTIVADO
+Warning[203]: Found opcode in column 1. (GOTO)
+Error[128]  : Missing argument(s)
+                      00153 GOTO
+0098                  00154 N8
+                      00155 ;SALTA PARA CONTINUAR NORMAL
+Warning[203]: Found opcode in column 1. (CLRF)
+Error[128]  : Missing argument(s)
+                      00156 CLRF
+Error[116]  : Address label duplicated or different in second pass (SEGUNI)
+0098                  00157 SEGUNI
+0098                  00158 N8
+Warning[203]: Found opcode in column 1. (MOVLW)
+0098   3064           00159 MOVLW D'100'
+                      00160 ;MOVIENDO EL VALOR DE 100 A W
+Warning[203]: Found opcode in column 1. (MOVWF)
+0099   0090           00161 MOVWF VAR
+                      00162 ;CARGANDO LA VARIABLE DE CONTEO A 100
+Warning[203]: Found opcode in column 1. (GOTO)
+009A   2893           00163 GOTO N3
+                      00164 ;SALTANDO A LA ETIQUETA N3
+Error[116]  : Address label duplicated or different in second pass (FIN)
+009B                  00165 FIN
+Warning[203]: Found opcode in column 1. (CLRF)
+Error[128]  : Missing argument(s)
+MPASM  5.39                      CHABORRO.ASM   7-31-2020  23:12:04         PAGE  6
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+009B                  00166 CLRF
+Error[115]  : Duplicate label ("INTCON" or redefining symbol that cannot be redefined)
+009B                  00167 INTCON
+                      00168 ;DESACTIVA TODAS LAS INTERRUPCIONES
+Warning[203]: Found opcode in column 1. (GOTO)
+009B   281D           00169 GOTO N10
+                      00170 ;VUELVE AL PROGRAMA PRINCIPAL
+Warning[205]: Found directive in column 1. (END)
+                      00171 END
+MPASM  5.39                      CHABORRO.ASM   7-31-2020  23:12:04         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CONVERT                           0000001E
+FIN                               0000001D
+INICIO                            00000010
+INTCON                            0000000B
+INTER                             00000090
+LINEA                             00000091
+MICROCONTROLADOR                  00000015
+MINDEC                            00000016
+MINUNI                            00000016
+N1                                0000001C
+N10                               0000001D
+N3                                00000093
+N8                                00000098
+OP                                00000000
+PA                                00000000
+PB                                00000000
+PCL                               00000000
+SEGDEC                            00000016
+SEGUNI                            00000016
+STATUS                            00000003
+TMR0                              00000001
+TRISA                             00000005
+TRISB                             00000000
+VAR                               00000010
+VAR1                              00000000
+__16F84                           00000001
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---X----------- XXXXXXXXXXXXXXXX XXXXXXXXXXX----- ----------------
+0080 : ---------------- XXXXXXXXXXXX---- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    41
+Program Memory Words Free:   983
+
+
+Errors   :    41
+Warnings :    62 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

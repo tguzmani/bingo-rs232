@@ -1,0 +1,130 @@
+MPASM  5.39                    PRACTICA10.ASM   7-31-2020  17:42:07         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001     LIST P=16F84
+                      00002 
+  00000001            00003 OPT     EQU 01H
+  00000001            00004 TMR0    EQU 01H
+  00000003            00005 STATUS  EQU 03H
+  00000005            00006 PORTA   EQU 05H
+  00000006            00007 PORTB   EQU 06H
+  00000005            00008 TRISA   EQU 05H
+  00000006            00009 TRISB   EQU 06H
+  0000000B            00010 INTCON  EQU 0BH
+                      00011 
+  00000010            00012 COUNT   EQU 10H
+                      00013 
+                      00014 #DEFINE RA0     PORTA, 0
+                      00015 
+                      00016 #DEFINE T0IF    INTCON, 2
+                      00017 
+                      00018 #DEFINE BANK0   BCF STATUS, 5
+                      00019 #DEFINE BANK1   BSF STATUS, 5
+                      00020 
+0000                  00021     ORG 0
+0000   2810           00022     GOTO INICIO
+                      00023 
+0010                  00024 INICIO ORG 10
+0010   1683           00025     BANK1
+0011   0185           00026     CLRF    TRISA       ; Declarado PORTA como salida
+0012   3007           00027     MOVLW   B'00000111'
+0013   0081           00028     MOVWF   OPT         ; Se activan PS<2:0>, asignando el prescalar 1:256 al timer
+0014   1283           00029     BANK0
+                      00030 
+0015   30A0           00031     MOVLW   B'10100000' ; Se activan interrupciones globales y la interrupción de timer
+0016   008B           00032     MOVWF   INTCON
+                      00033 
+0017   30D9           00034     MOVLW   D'217'
+0018   0081           00035     MOVWF   TMR0        ; Se carga el TMR0 en 217
+0019   3064           00036     MOVLW   D'100'      
+001A   0090           00037     MOVWF   COUNT       ; Se carga 100 en la variable de conteo
+                      00038 
+001B                  00039 MAIN 
+001B   0000           00040     NOP
+001C   0000           00041     NOP                 ; No hace nada, pero gasta un ciclo de reloj
+001D   281B           00042     GOTO    MAIN        ; Nos mantenemos en este ciclo "idle"
+                      00043 
+0004                  00044     ORG     4
+0004   2850           00045     GOTO    INTER       ; Saltar a INTER si hubo interrupción de TMR0
+                      00046 
+0050                  00047 INTER ORG 50
+0050   0B90           00048     DECFSZ  COUNT, 1    ; Disminuye a COUNT en 1. Si COUNT = 0, salta la próxima línea
+0051   2853           00049     GOTO    RESET_TMR0  ; Si COUNT != 0, entonces vamos a RESET_TMR0
+0052   2857           00050     GOTO    SEG         ; Si COUNT = 0, entonces pasó un segundi
+                      00051 
+0053                  00052 RESET_TMR0
+0053   30D9           00053     MOVLW   D'217'
+MPASM  5.39                    PRACTICA10.ASM   7-31-2020  17:42:07         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0054   0081           00054     MOVWF   TMR0        ; Se reinicia TMR0 a 217
+0055   110B           00055     BCF     T0IF        ; Se apaga el flag de overflow de TMR0
+0056   0009           00056     RETFIE  
+                      00057 
+0057                  00058 SEG
+0057   1805           00059     BTFSC   RA0         ; Se hace una prueba sobre RA0 (PORTA<0>)
+0058   285B           00060     GOTO    OFF         ; Si RA0 = 1, saltamos a OFF
+0059   1405           00061     BSF     RA0         ; Como RA0 = 0, entonces lo encendemos
+005A   285C           00062     GOTO    RESET_CNT          
+                      00063 
+005B                  00064 OFF
+005B   1005           00065     BCF     RA0         ; Apagamos RA0
+                      00066 
+005C                  00067 RESET_CNT
+005C   3064           00068     MOVLW   D'100'      
+005D   0090           00069     MOVWF   COUNT       ; Se reinicia el valor del contador
+005E   2853           00070     GOTO    RESET_TMR0
+                      00071 
+Warning[205]: Found directive in column 1. (END)
+                      00072 END
+MPASM  5.39                    PRACTICA10.ASM   7-31-2020  17:42:07         PAGE  3
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BANK0                             BCF STATUS, 5
+BANK1                             BSF STATUS, 5
+COUNT                             00000010
+INICIO                            00000010
+INTCON                            0000000B
+INTER                             00000050
+MAIN                              0000001B
+OFF                               0000005B
+OPT                               00000001
+PORTA                             00000005
+PORTB                             00000006
+RA0                               PORTA, 0
+RESET_CNT                         0000005C
+RESET_TMR0                        00000053
+SEG                               00000057
+STATUS                            00000003
+T0IF                              INTCON, 2
+TMR0                              00000001
+TRISA                             00000005
+TRISB                             00000006
+__16F84                           00000001
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---X----------- XXXXXXXXXXXXXX-- ---------------- ----------------
+0040 : ---------------- XXXXXXXXXXXXXXX- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    31
+Program Memory Words Free:   993
+
+
+Errors   :     0
+Warnings :     1 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

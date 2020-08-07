@@ -1,0 +1,68 @@
+MPASM  5.39                     PRACTICA7.ASM   7-30-2020  21:03:12         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001         LIST P=16F84
+                      00002 
+                      00003 ;===============
+                      00004 ; DATA
+                      00005 ;===============
+                      00006 
+                      00007 ; Registros de función especial
+  00000003            00008 STATUS  EQU     03H
+  00000006            00009 TRISB   EQU     06H
+  00000006            00010 PORTB   EQU     06H
+                      00011 
+                      00012 ; Definiciones mnemoténicas
+                      00013 #DEFINE RP0             STATUS, 5
+                      00014 #DEFINE BANK1   BSF RP0
+                      00015 #DEFINE BANK0   BCF RP0
+                      00016 
+                      00017 ;===============
+                      00018 ; TEXT
+                      00019 ;===============
+                      00020 
+0000                  00021         ORG     0
+0000                  00022 INICIO
+0000   1683           00023         BANK1                           ; Cambiar al banco 1
+0001   0186           00024         CLRF    TRISB           ; Configura a PORTB como salida
+0002   1283           00025         BANK0                           ; De vuelta al banco 0
+                      00026 
+0003   30AA           00027         MOVLW   B'10101010' ; Se carga el literal 10101010 en W
+0004   0086           00028         MOVWF   PORTB           ; Se mueve el valor de W a PORTB
+                      00029 
+Warning[205]: Found directive in column 1. (END)
+                      00030 END
+MPASM  5.39                     PRACTICA7.ASM   7-30-2020  21:03:12         PAGE  2
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BANK0                             BCF RP0
+BANK1                             BSF RP0
+INICIO                            00000000
+PORTB                             00000006
+RP0                               STATUS, 5
+STATUS                            00000003
+TRISB                             00000006
+__16F84                           00000001
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXX----------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:     5
+Program Memory Words Free:  1019
+
+
+Errors   :     0
+Warnings :     1 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

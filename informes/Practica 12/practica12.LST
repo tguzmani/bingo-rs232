@@ -1,0 +1,182 @@
+MPASM  5.39                    PRACTICA12.ASM   7-31-2020  23:54:55         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001     LIST P=16F84
+                      00002 
+  00000001            00003 OPT     EQU 01H
+  00000001            00004 TMR0    EQU 01H
+  00000002            00005 PCL     EQU 02H
+  00000003            00006 STATUS  EQU 03H
+  00000005            00007 PORTA   EQU 05H
+  00000006            00008 PORTB   EQU 06H
+  00000005            00009 TRISA   EQU 05H
+  00000006            00010 TRISB   EQU 06H
+  0000000B            00011 INTCON  EQU 0BH
+                      00012 
+  00000011            00013 SEGUNI  EQU 11H
+  00000012            00014 SEGDEC  EQU 12H
+  00000013            00015 MINUNI  EQU 13H
+  00000014            00016 MINDEC  EQU 14H
+                      00017 
+  00000010            00018 COUNT   EQU 10H
+  00000015            00019 COUNT1  EQU 15H
+                      00020 
+                      00021 #DEFINE T0IF    INTCON, 2
+                      00022 #DEFINE RA4     PORTA, 4
+                      00023 #DEFINE Z       STATUS, 2
+                      00024 
+                      00025 #DEFINE BANK0   BCF STATUS, 5
+                      00026 #DEFINE BANK1   BSF STATUS, 5
+                      00027 
+0000                  00028     ORG 0
+0000   2810           00029     GOTO INICIO
+                      00030 
+0010                  00031 INICIO ORG 10
+0010   1683           00032     BANK1
+0011   30FF           00033     MOVLW   B'11111111'
+0012   0085           00034     MOVWF   TRISA       ; PORTA es de entrada ahora
+0013   0186           00035     CLRF    TRISB
+                      00036 
+0014   3007           00037     MOVLW   B'00000111' ; Prescalar de 256
+0015   0081           00038     MOVWF   OPT         ; Se mueve el prescalar de 256 a OPTION_REG
+0016   1283           00039     BANK0
+                      00040 
+0017   0191           00041     CLRF    SEGUNI      
+0018   0192           00042     CLRF    SEGDEC      
+0019   0193           00043     CLRF    MINUNI      
+001A   0194           00044     CLRF    MINDEC      ; Borradas variables que llevan tiempo
+                      00045     
+001B   30A0           00046     MOVLW   B'10100000' 
+001C   008B           00047     MOVWF   INTCON      ; Activación de interrupciones globales y de TMR0
+                      00048 
+                      00049 
+001D   30D9           00050     MOVLW   D'217'
+001E   0081           00051     MOVWF   TMR0        ; Cargando 217 a TMR0 para obtener 10 ms
+001F   3064           00052     MOVLW   D'100'
+0020   0090           00053     MOVWF   COUNT       ; Cargado 100 en COUNT, para obtener 1000 ms
+MPASM  5.39                    PRACTICA12.ASM   7-31-2020  23:54:55         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00054 
+0021                  00055 MAIN
+0021   1E05           00056     BTFSS   RA4       
+0022   28A0           00057     GOTO    FIN         ; Si el boton esta presionado se va a FIN
+                      00058 
+0023                  00059 CARGA
+0023   0811           00060     MOVF    SEGUNI, 0   ; Se carga SEGUNI a W
+0024   2027           00061     CALL    CONVERT
+0025   0086           00062     MOVWF   PORTB       ; Se mueve el valor que dio CONVERT a PORTB
+0026   2821           00063     GOTO    MAIN
+                      00064 
+0027                  00065 CONVERT
+0027   0782           00066     ADDWF   PCL, 1          ; Se suma W a PCL y se guarda en PCL
+0028   34C0           00067     RETLW   B'11000000'     ; Se guarda en W el código de segmentos de 0
+0029   34F9           00068     RETLW   B'11111001'     ; Se guarda en W el código de segmentos de 1
+002A   34A4           00069     RETLW   B'10100100'     ; Se guarda en W el código de segmentos de 2
+002B   34B0           00070     RETLW   B'10110000'     ; Se guarda en W el código de segmentos de 3
+002C   3499           00071     RETLW   B'10011001'     ; Se guarda en W el código de segmentos de 4
+002D   3492           00072     RETLW   B'10010010'     ; Se guarda en W el código de segmentos de 5
+002E   3482           00073     RETLW   B'10000010'     ; Se guarda en W el código de segmentos de 6
+002F   34F8           00074     RETLW   B'11111000'     ; Se guarda en W el código de segmentos de 7
+0030   3480           00075     RETLW   B'10000000'     ; Se guarda en W el código de segmentos de 8
+0031   3498           00076     RETLW   B'10011000'     ; Se guarda en W el código de segmentos de 9
+                      00077 
+0004                  00078     ORG 4
+0004   2890           00079     GOTO INTER
+                      00080 
+0090                  00081 INTER ORG 90
+0090   0B90           00082     DECFSZ  COUNT, 1        ; Se disminuye COUNT en 1 y se guarda en COUNT
+0091   2893           00083     GOTO    RESET_TMR0      ; Brincar si no ha pasado un segundo (COUNT <> 0)
+0092   2897           00084     GOTO    SEG             ; Brincar si paso un segundo (COUNT = 0)
+                      00085 
+0093                  00086 RESET_TMR0
+0093   30D9           00087     MOVLW   D'217'
+0094   0081           00088     MOVWF   TMR0            ; Se reestablece TMR0 a 217 (10 ms)
+0095   110B           00089     BCF     T0IF            ; Se apaga la flag de interrupcion de TMR0 en INTCON
+0096   0009           00090     RETFIE                  ; Se sale de interrupcion
+                      00091 
+0097                  00092 SEG
+0097   0A91           00093     INCF    SEGUNI, 1       ; Se incrementa unidades de segundo, se guarda en SEGUNI
+0098   0811           00094     MOVF    SEGUNI, 0       ; Se mueve SEGUNI a W
+0099   3C0A           00095     SUBLW   D'10'           ; Se resta 10 a W
+009A   1D03           00096     BTFSS   Z               ; Si el resultado anterior es cero, Z = 1
+009B   289D           00097     GOTO    RESET_COUNT              
+009C   0191           00098     CLRF    SEGUNI          ; Se limpia SEGUNI
+                      00099 
+009D                  00100 RESET_COUNT
+009D   3064           00101     MOVLW   D'100'          
+009E   0090           00102     MOVWF   COUNT           ; Se reestablece COUNT a 100
+009F   2893           00103     GOTO    RESET_TMR0      
+                      00104 
+00A0                  00105 FIN
+                      00106     ; CLRF    INTCON          ; Se desactivan todas las interrupciones
+MPASM  5.39                    PRACTICA12.ASM   7-31-2020  23:54:55         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+00A0   2823           00107     GOTO    CARGA
+                      00108 
+Warning[205]: Found directive in column 1. (END)
+                      00109 END
+MPASM  5.39                    PRACTICA12.ASM   7-31-2020  23:54:55         PAGE  4
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BANK0                             BCF STATUS, 5
+BANK1                             BSF STATUS, 5
+CARGA                             00000023
+CONVERT                           00000027
+COUNT                             00000010
+COUNT1                            00000015
+FIN                               000000A0
+INICIO                            00000010
+INTCON                            0000000B
+INTER                             00000090
+MAIN                              00000021
+MINDEC                            00000014
+MINUNI                            00000013
+OPT                               00000001
+PCL                               00000002
+PORTA                             00000005
+PORTB                             00000006
+RA4                               PORTA, 4
+RESET_COUNT                       0000009D
+RESET_TMR0                        00000093
+SEG                               00000097
+SEGDEC                            00000012
+SEGUNI                            00000011
+STATUS                            00000003
+T0IF                              INTCON, 2
+TMR0                              00000001
+TRISA                             00000005
+TRISB                             00000006
+Z                                 STATUS, 2
+__16F84                           00000001
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : X---X----------- XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XX--------------
+0080 : ---------------- XXXXXXXXXXXXXXXX X--------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    53
+Program Memory Words Free:   971
+
+
+Errors   :     0
+Warnings :     1 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

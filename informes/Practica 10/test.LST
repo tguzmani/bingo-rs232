@@ -1,0 +1,63 @@
+MPASM  5.39                          TEST.ASM   7-31-2020  17:29:37         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001     LIST P=16F84
+                      00002 
+  00000003            00003 STATUS  EQU 03H
+  00000005            00004 PORTA   EQU 05H
+  00000005            00005 TRISA   EQU 05H
+                      00006 
+  00000010            00007 COUNT   EQU 10H
+                      00008 
+                      00009 #DEFINE RA0     PORTA, 0
+                      00010 
+                      00011 #DEFINE BANK0   BCF STATUS, 5
+                      00012 #DEFINE BANK1   BSF STATUS, 5
+                      00013 
+0000                  00014     ORG 0
+0000   1683           00015     BANK1
+0001   0185           00016     CLRF    TRISA       ; Declarado PORTA como salida
+0002   1283           00017     BANK0
+0003   2804           00018     GOTO INICIO
+                      00019 
+0004                  00020 INICIO
+0004   301F           00021     MOVLW   B'00011111'
+0005   0085           00022     MOVWF   PORTA
+0006   2804           00023     GOTO INICIO
+Warning[205]: Found directive in column 1. (END)
+                      00024 END
+MPASM  5.39                          TEST.ASM   7-31-2020  17:29:37         PAGE  2
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BANK0                             BCF STATUS, 5
+BANK1                             BSF STATUS, 5
+COUNT                             00000010
+INICIO                            00000004
+PORTA                             00000005
+RA0                               PORTA, 0
+STATUS                            00000003
+TRISA                             00000005
+__16F84                           00000001
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXX--------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:     7
+Program Memory Words Free:  1017
+
+
+Errors   :     0
+Warnings :     1 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

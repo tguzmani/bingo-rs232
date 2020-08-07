@@ -1,0 +1,114 @@
+MPASM  5.39                     PRACTICA8.ASM   7-30-2020  22:59:55         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001     LIST P=16F84
+                      00002 
+  00000005            00003 PORTA   EQU 05H
+  00000005            00004 TRISA   EQU 05H
+  00000006            00005 PORTB   EQU 06H
+  00000006            00006 TRISB   EQU 06H
+  00000003            00007 STATUS  EQU 03H
+                      00008 
+                      00009 #DEFINE BANK0   BCF STATUS, 5
+                      00010 #DEFINE BANK1   BSF STATUS, 5
+                      00011 
+0000                  00012     ORG 0
+0000                  00013 SETUP
+0000   1683           00014     BANK1
+0001   0186           00015     CLRF    TRISB
+0002   301F           00016     MOVLW   B'00011111' ; Todos los pines de PORTA son de lectura
+0003   0085           00017     MOVWF   TRISA
+0004   1283           00018     BANK0
+0005   0186           00019     CLRF    PORTB
+                      00020 
+0006                  00021 INICIO  
+0006   1A05           00022     BTFSC   PORTA, 4    
+0007   2811           00023     GOTO    CUATRO      ; Si PORTA<4> es 1 entonces, se va a CUATRO
+                      00024 
+0008   1985           00025     BTFSC   PORTA, 3    
+0009   2814           00026     GOTO    TRES        ; Si PORTA<3> es 1 entonces, se va a TRES  
+                      00027 
+000A   1905           00028     BTFSC   PORTA, 2    
+000B   2817           00029     GOTO    DOS         ; Si PORTA<2> es 1 entonces, se va a DOS
+                      00030 
+000C   1885           00031     BTFSC   PORTA, 1
+000D   281A           00032     GOTO    UNO         ; Si PORTA<1> es 1 entonces, se va a UNO  
+                      00033 
+000E   1805           00034     BTFSC   PORTA, 0
+000F   281D           00035     GOTO    CERO        ; Si PORTA<0> es 1 entonces, se va a CERO 
+                      00036 
+0010   2806           00037     GOTO INICIO         ; Ciclar por estas instrucciones
+                      00038 
+0011                  00039 CUATRO
+0011   3099           00040     MOVLW   B'10011001' ; Codigo en 7 segmentos del número 4
+0012   0086           00041     MOVWF   PORTB
+0013   2806           00042     GOTO    INICIO
+                      00043 
+0014                  00044 TRES
+0014   30B0           00045     MOVLW   B'10110000' ; Codigo en 7 segmentos del número 3
+0015   0086           00046     MOVWF   PORTB
+0016   2806           00047     GOTO    INICIO
+                      00048 
+0017                  00049 DOS
+0017   30A4           00050     MOVLW   B'10100100' ; Codigo en 7 segmentos del número 2
+0018   0086           00051     MOVWF   PORTB
+0019   2806           00052     GOTO    INICIO
+                      00053 
+MPASM  5.39                     PRACTICA8.ASM   7-30-2020  22:59:55         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+001A                  00054 UNO
+001A   30F9           00055     MOVLW   B'11111001' ; Codigo en 7 segmentos del número 1
+001B   0086           00056     MOVWF   PORTB
+001C   2806           00057     GOTO    INICIO
+                      00058 
+001D                  00059 CERO
+001D   30C0           00060     MOVLW   B'11000000' ; Codigo en 7 segmentos del número 0
+001E   0086           00061     MOVWF   PORTB
+001F   2806           00062     GOTO    INICIO
+Warning[205]: Found directive in column 1. (END)
+                      00063 END
+MPASM  5.39                     PRACTICA8.ASM   7-30-2020  22:59:55         PAGE  3
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BANK0                             BCF STATUS, 5
+BANK1                             BSF STATUS, 5
+CERO                              0000001D
+CUATRO                            00000011
+DOS                               00000017
+INICIO                            00000006
+PORTA                             00000005
+PORTB                             00000006
+SETUP                             00000000
+STATUS                            00000003
+TRES                              00000014
+TRISA                             00000005
+TRISB                             00000006
+UNO                               0000001A
+__16F84                           00000001
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    32
+Program Memory Words Free:   992
+
+
+Errors   :     0
+Warnings :     1 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+

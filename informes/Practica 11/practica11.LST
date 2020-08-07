@@ -1,0 +1,93 @@
+MPASM  5.39                    PRACTICA11.ASM   7-31-2020  18:20:17         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001     LIST P=16F84
+                      00002 
+  00000003            00003 STATUS  EQU 03H
+  00000005            00004 PORTA   EQU 05H
+  00000006            00005 PORTB   EQU 06H
+  00000005            00006 TRISA   EQU 05H
+  00000006            00007 TRISB   EQU 06H
+  00000002            00008 PCL     EQU 02H
+                      00009 
+  00000010            00010 COUNT   EQU 10H
+                      00011 
+                      00012 #DEFINE RA0     PORTA, 0
+                      00013 #DEFINE BANK0   BCF STATUS, 5
+                      00014 #DEFINE BANK1   BSF STATUS, 5
+                      00015 
+0000                  00016     ORG 0
+                      00017 
+0000   1683           00018     BANK1
+0001   0186           00019     CLRF    TRISB
+0002   30FF           00020     MOVLW   B'11111111'
+0003   0085           00021     MOVWF   TRISA           ; Ahora PORTA es todo de lectura
+0004   1283           00022     BANK0
+                      00023 
+0005                  00024 INICIO
+0005   0805           00025     MOVF    RA0     
+0006   390F           00026     ANDLW   B'00001111'     ; Se enmascara para obtener solo los 4 primeros bits
+0007   200A           00027     CALL    CONVERT         ; Se llama a CONVERT
+0008   0086           00028     MOVWF   PORTB           ; Se mueve W a PORTB
+0009   2805           00029     GOTO    INICIO
+                      00030 
+000A                  00031 CONVERT
+000A   0782           00032     ADDWF   PCL, 1          ; Se suma W a PCL y se guarda en PCL
+000B   34C0           00033     RETLW   B'11000000'     ; Se guarda en W el código de segmentos de 0
+000C   34F9           00034     RETLW   B'11111001'     ; Se guarda en W el código de segmentos de 1
+000D   34A4           00035     RETLW   B'10100100'     ; Se guarda en W el código de segmentos de 2
+000E   34B0           00036     RETLW   B'10110000'     ; Se guarda en W el código de segmentos de 3
+000F   3499           00037     RETLW   B'10011001'     ; Se guarda en W el código de segmentos de 4
+0010   3492           00038     RETLW   B'10010010'     ; Se guarda en W el código de segmentos de 5
+0011   3482           00039     RETLW   B'10000010'     ; Se guarda en W el código de segmentos de 6
+0012   34F8           00040     RETLW   B'11111000'     ; Se guarda en W el código de segmentos de 7
+0013   3480           00041     RETLW   B'10000000'     ; Se guarda en W el código de segmentos de 8
+0014   3498           00042     RETLW   B'10011000'     ; Se guarda en W el código de segmentos de 9
+0015   3488           00043     RETLW   B'10001000'     ; Se guarda en W el código de segmentos de A
+0016   3483           00044     RETLW   B'10000011'     ; Se guarda en W el código de segmentos de B
+0017   34C6           00045     RETLW   B'11000110'     ; Se guarda en W el código de segmentos de C
+0018   34A1           00046     RETLW   B'10100001'     ; Se guarda en W el código de segmentos de D
+0019   3486           00047     RETLW   B'10000110'     ; Se guarda en W el código de segmentos de E
+001A   348E           00048     RETLW   B'10001110'     ; Se guarda en W el código de segmentos de F
+                      00049 
+Warning[205]: Found directive in column 1. (END)
+                      00050 END
+MPASM  5.39                    PRACTICA11.ASM   7-31-2020  18:20:17         PAGE  2
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+BANK0                             BCF STATUS, 5
+BANK1                             BSF STATUS, 5
+CONVERT                           0000000A
+COUNT                             00000010
+INICIO                            00000005
+PCL                               00000002
+PORTA                             00000005
+PORTB                             00000006
+RA0                               PORTA, 0
+STATUS                            00000003
+TRISA                             00000005
+TRISB                             00000006
+__16F84                           00000001
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+0000 : XXXXXXXXXXXXXXXX XXXXXXXXXXX----- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:    27
+Program Memory Words Free:   997
+
+
+Errors   :     0
+Warnings :     1 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
